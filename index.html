@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Handfart Piano</title>
+		<link href="styles/font.css" rel="stylesheet">
+		<link href="styles/style.css" rel="stylesheet">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="description" content="Performe your own handfarts and play small songs on the handfart piano."/>
+		<meta name="keywords" content="handfart, handfarts, manualist, manualism, handmusic, music, hand, fart, piano, fun, sound"/>
+	</head>
+	<body>
+	  <section id="wrap">
+		<header>
+		  <h1>Handfart Piano</h1>
+		  <h2>Use your keyboard or mouse. Hover for hints.</h2>
+		</header>
+		<section id="main">
+		  <div class="nowplaying">C#</div>
+		  <div class="keys">
+			<div data-key="65" class="key" data-note="C">
+			  <span class="hints" style="transition-delay:0ms">A</span>
+			</div>
+			<div data-key="87" class="key sharp" data-note="C#">
+			  <span class="hints" style="transition-delay:50ms">W</span>
+			</div>
+			<div data-key="83" class="key" data-note="D">
+			  <span class="hints" style="transition-delay:100ms">S</span>
+			</div>
+			<div data-key="69" class="key sharp" data-note="D#">
+			  <span class="hints" style="transition-delay:150ms">E</span>
+			</div>
+			<div data-key="68" class="key" data-note="E">
+			  <span class="hints" style="transition-delay:200ms">D</span>
+			</div>
+			<div data-key="70" class="key" data-note="F">
+			  <span class="hints" style="transition-delay:250ms">F</span>
+			</div>
+			<div data-key="84" class="key sharp" data-note="F#">
+			  <span class="hints" style="transition-delay:300ms">T</span>
+			</div>
+			<div data-key="71" class="key" data-note="G">
+			  <span class="hints" style="transition-delay:350ms">G</span>
+			</div>
+			<div data-key="90" class="key sharp" data-note="G#">
+			  <span class="hints" style="transition-delay:400ms">Z</span>
+			</div>
+			<div data-key="72" class="key" data-note="A">
+			  <span class="hints" style="transition-delay:450ms">H</span>
+			</div>
+			<div data-key="85" class="key sharp" data-note="A#">
+			  <span class="hints" style="transition-delay:500ms">U</span>
+			</div>
+			<div data-key="74" class="key" data-note="B">
+			  <span class="hints" style="transition-delay:550ms">J</span>
+			</div>
+			<div data-key="75" class="key" data-note="C">
+			  <span class="hints" style="transition-delay:600ms">K</span>
+			</div>
+			<div data-key="79" class="key sharp" data-note="C#">
+			  <span class="hints" style="transition-delay:650ms">O</span>
+			</div>
+			<div data-key="76" class="key" data-note="D">
+			  <span class="hints" style="transition-delay:700ms">L</span>
+			</div>
+			<div data-key="80" class="key sharp" data-note="D#">
+			  <span class="hints" style="transition-delay:750ms">P</span>
+			</div>
+			<div data-key="192" class="key" data-note="E">
+			  <span class="hints" style="transition-delay:800ms">Ö</span>
+			</div>
+		  </div>
+
+		  <audio data-key="65" src="sounds/mp3/C3.mp3"></audio>
+		  <audio data-key="87" src="sounds/mp3/Cis3.mp3"></audio>
+		  <audio data-key="83" src="sounds/mp3/D3.mp3"></audio>
+		  <audio data-key="69" src="sounds/mp3/Dis3.mp3"></audio>
+		  <audio data-key="68" src="sounds/mp3/E3.mp3"></audio>
+		  <audio data-key="70" src="sounds/mp3/F3.mp3"></audio>
+		  <audio data-key="84" src="sounds/mp3/Fis3.mp3"></audio>
+		  <audio data-key="71" src="sounds/mp3/G3.mp3"></audio>
+		  <audio data-key="90" src="sounds/mp3/Gis3.mp3"></audio>
+		  <audio data-key="72" src="sounds/mp3/A3.mp3"></audio>
+		  <audio data-key="85" src="sounds/mp3/Bb3.mp3"></audio>
+		  <audio data-key="74" src="sounds/mp3/H3.mp3"></audio>
+		  <audio data-key="75" src="sounds/mp3/C4.mp3"></audio>
+		  <audio data-key="79" src="sounds/mp3/Cis4.mp3"></audio>
+		  <audio data-key="76" src="sounds/mp3/D4.mp3"></audio>
+		  <audio data-key="80" src="sounds/mp3/Dis4.mp3"></audio>
+		  <audio data-key="192" src="sounds/mp3/E4.mp3"></audio>
+		</section>
+	  </section>
+	  
+	  <script>
+		const keys = document.querySelectorAll('.key'),
+		  note = document.querySelector('.nowplaying'),
+		  hints = document.querySelectorAll('.hints');
+
+		function playNote(e){
+
+			let audio = document.querySelector(`audio[data-key="${e.keyCode}"]`),
+			key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+			if (key === null) {
+				audio = document.querySelector(`audio[data-key="${e.target.getAttribute('data-key')}"]`);
+				key = e.target;
+			}
+
+			const keyNote = key.getAttribute('data-note');
+
+			if (keyNote === null) {
+				return;
+			}
+
+			key.classList.add('playing'); 
+			note.innerHTML = keyNote;
+			audio.currentTime = 0;
+			audio.play();
+
+		}
+
+		function removeTransition(e){
+			if(e.propertyName !== 'transform') return;
+				this.classList.remove('playing');
+		}
+
+		function hintsOn(e, index){
+			e.setAttribute('style', 'transition-delay:' + index * 10 + 'ms');
+		}
+
+		hints.forEach(hintsOn);
+
+		keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+		window.addEventListener('keydown', playNote);
+		window.addEventListener('click', playNote);
+
+		// Show message when touch device is detected
+		if(typeof window.ontouchstart !== 'undefined')  alert('For better performance use it on your desktop device ;)');
+	  </script>
+  
+  </body>
+</html>
